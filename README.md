@@ -68,3 +68,27 @@ rosdep update
 - 단위는 라디안(radian)을 사용함.
 - 반시계 방향으로 회전 시 값이 증가함.
 3. **업데이트 주기**: 거북이가 이동하지 않는 정지 상태에서도 약 60Hz(초당 60번)의 주기로 위치 데이터가 계속해서 발행(publish)됨을 확인.
+
+## 과제 3: turtlesim 토픽 및 메시지 구조 분석
+
+실행 중인 `turtlesim_node`에서 발행/구독되는 주요 토픽들의 구조를 분석.
+
+### 1. /turtle1/cmd_vel
+- **Type**: `geometry_msgs/Twist`
+- **Description**: 거북이에게 이동 명령을 내리는 토픽 (구독자: turtlesim_node)
+- **Structure**:
+  - `linear` (Vector3): 직진 속도 ($x, y, z$) - 주로 $x$축 사용
+  - `angular` (Vector3): 회전 속도 ($x, y, z$) - 주로 $z$축 사용
+
+### 2. /turtle1/pose
+- **Type**: `turtlesim/Pose`
+- **Description**: 거북이의 현재 상태 정보를 발행하는 토픽 (발행자: turtlesim_node)
+- **Structure**:
+  - `x`, `y`: 위치 좌표 (`float32`)
+  - `theta`: 방향 (`float32`, radian)
+  - `linear_velocity`, `angular_velocity`: 현재 속도 (`float32`)
+
+### 3. /turtle1/color_sensor
+- **Type**: `turtlesim/Color`
+- **Description**: 거북이 위치의 배경 색상 정보를 전달함
+- **Structure**: `r`, `g`, `b` (uint8, 0~255 범위)
