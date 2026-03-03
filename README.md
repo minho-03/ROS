@@ -101,3 +101,12 @@ rosdep update
 1. **직진**: `rostopic pub -1 /turtle1/cmd_vel geometry_msgs/Twist -- '[2.0, 0.0, 0.0]' '[0.0, 0.0, 0.0]'`
 2. **90도 회전**: `rostopic pub -1 /turtle1/cmd_vel geometry_msgs/Twist -- '[0.0, 0.0, 0.0]' '[0.0, 0.0, 1.5708]'`
 3. 위 과정을 4회 반복하여 정사각형 궤적 생성 완료.
+
+## 과제 5: turtlesim 2개 동시 실행 관찰
+
+`__name` 파라미터를 사용하여 동일한 노드를 서로 다른 이름으로 실행하는 실습을 진행함.
+
+### 관찰 결과
+- **노드 목록**: `/turtlesim`과 `/my_turtle` 두 개의 노드가 정상 실행됨을 확인.
+- **동작 원리**: `turtle_teleop_key`로 조종 시 두 거북이가 동시에 움직임.
+- **원인 분석**: 두 노드 모두 `/turtle1/cmd_vel` 토픽을 구독(Subscribe)하고 있기 때문에, 하나의 발행자(Publisher)가 보내는 메시지를 동시에 수신함.
