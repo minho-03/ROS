@@ -97,6 +97,9 @@ rosdep update
 
 명령줄 인터페이스(CLI)를 통해 거북이에게 직접 속도 명령을 전달하여 정사각형 경로를 주행함.
 
+### 과제 4 실행 결과 화면
+![거북이로 정사각형 그리기 실행 화면](./images/과제4.PNG)
+
 ### 사용한 명령어 순서
 1. **직진**: `rostopic pub -1 /turtle1/cmd_vel geometry_msgs/Twist -- '[2.0, 0.0, 0.0]' '[0.0, 0.0, 0.0]'`
 2. **90도 회전**: `rostopic pub -1 /turtle1/cmd_vel geometry_msgs/Twist -- '[0.0, 0.0, 0.0]' '[0.0, 0.0, 1.5708]'`
@@ -105,6 +108,9 @@ rosdep update
 ## 과제 5: turtlesim 2개 동시 실행 관찰
 
 `__name` 파라미터를 사용하여 동일한 노드를 서로 다른 이름으로 실행하는 실습을 진행함.
+
+### 과제 5 실행 결과 화면
+![거북이 두 마리 실행 화면](./images/과제5.PNG)
 
 ### 관찰 결과
 - **노드 목록**: `/turtlesim`과 `/my_turtle` 두 개의 노드가 정상 실행됨을 확인.
