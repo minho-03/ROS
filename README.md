@@ -1,8 +1,9 @@
-# ROS development
-- Ubuntu 20.04
-- ROS noetic
+# ROS 환경 정보
+- OS : Ubuntu 20.04 (VMware)
+- ROS Version : ROS noetic Desktop Full
+- Workspace : '~/catkin_ws'
 
-# ROS install
+# ROS 설치과정
 1. source list
 ```bash
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
@@ -39,3 +40,13 @@ source devel/setup.bash
 ```bash
 echo $ROS_PACKAGE_PATH
 ```
+
+# rosdep(의존성 도구 설치)
+```bash
+sudo apt install python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
+sudo rosdep init
+rosdep update
+```
+
+# 설치 확인(Verification)
+- ```rosversion -d``` (출력결과:```noetic```)
