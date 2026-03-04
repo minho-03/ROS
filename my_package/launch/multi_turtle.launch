@@ -1,16 +1,15 @@
 <launch>
-<!-- 첫 번째 거북이 (기본 이름) -->
+
+<!--첫 번째 거북이(기본 이름)-->
 <node pkg="turtlesim" type="turtlesim_node" name="turtle1" />
 
-<!-- 두 번째 거북이 (이름 변경 + 토픽 리맵핑) -->
+<!--두 번째 거북이(이름 변경 + 토픽 리맵핑)-->
 <node pkg="turtlesim" type="turtlesim_node" name="turtle2">
-
 <remap from="/turtle1/cmd_vel" to="/turtle2/cmd_vel" />
 
 </node>
 
-<!-- 키보드 조작 (turtle1 제어용) -->
+<!--키보드 조작 (turtle1 제어용)-->
 <node pkg="turtlesim" type="turtle_teleop_key" name="teleop" output="screen" />
-
 </launch>
 
