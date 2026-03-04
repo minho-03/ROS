@@ -1,0 +1,16 @@
+<launch>
+
+<!-- 거북이 실행 -->
+<node pkg="turtlesim" type="turtlesim_node" name="turtlesim_node">
+
+<!-- 배경색 변경 (RGB 값) -->
+<param name="background_r" value="0" />
+<param name="background_g" value="0" />
+<param name="background_b" value="0" />
+
+</node>
+
+<!-- 키보드 조작 -->
+<node pkg="turtlesim" type="turtle_teleop_key" name="teleop" output="screen" />
+
+</launch>
