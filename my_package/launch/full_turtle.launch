@@ -1,0 +1,5 @@
+<launch>
+  <include file="$(find my_package)/launch/color_turtle.launch" />
+
+  <node pkg="rqt_graph" type="rqt_graph" name="rqt_graph" />
+</launch>
