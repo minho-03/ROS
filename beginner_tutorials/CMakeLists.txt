@@ -59,6 +59,7 @@ add_message_files(
 add_service_files(
   FILES
   AddTwoInts.srv
+  StringLength.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -161,7 +162,19 @@ include_directories(
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-catkin_install_python(PROGRAMS scripts/talker.py scripts/listener.py
+catkin_install_python(
+  PROGRAMS 
+  scripts/talker.py
+  scripts/listener.py
+  scripts/turtle_circle.py
+  scripts/turtle_pos_sub.py
+  scripts/temp_pub.py
+  scripts/temp_sub.py
+  scripts/counter_even_sub.py
+  scripts/counter_pub.py
+  scripts/counter_sub.py
+  scripts/add_two_ints_server.py
+  scripts/add_two_ints_client.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
