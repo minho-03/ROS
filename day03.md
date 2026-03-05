@@ -1,4 +1,6 @@
 #Day 3 실습 결과
 ## rosbag record
-![거북이 경로](/screenshots/rosbag_record.png)
+![rosbag record 중 거북이 경로](/screenshots/rosbag_record.png)
+## rosbag play
+![rosbag play 재생 결과](screentshots/rosbag_play.png)
 
