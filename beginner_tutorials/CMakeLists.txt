@@ -179,6 +179,8 @@ catkin_install_python(
   scripts/counter_sub.py
   scripts/add_two_ints_server.py
   scripts/add_two_ints_client.py
+  scripts/timer_server.py
+  scripts/timer_client.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
