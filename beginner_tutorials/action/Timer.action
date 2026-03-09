@@ -1,5 +1,5 @@
 # Goal
-int 32 target_seconds
+int32 target_seconds
 ---
 # Result
 bool success
