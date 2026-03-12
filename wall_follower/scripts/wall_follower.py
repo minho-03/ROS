@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 import rospy
 import math
-import numpy as np
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
 
-# ===== 주행 파라미터 최적화 =====
-LINEAR_SPEED = 0.4       # 속도를 약간 높임
-MAX_ANGULAR_SPEED = 1.0  # 회전 속도 제한
-DESIRED_DISTANCE = 1.0   # 벽과의 거리
+# ===== 파라미터 =====
+LINEAR_SPEED = 0.15
+ANGULAR_SPEED = 0.3
+DESIRED_DISTANCE = 0.5  # 벽에서 유지할 거리 (m)
 
 class WallFollowerPID:
     def __init__(self):
@@ -16,36 +15,41 @@ class WallFollowerPID:
         self.pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
         self.sub = rospy.Subscriber('/scan', LaserScan, self.scan_callback)
 
-        self.kp = 1.8
-        self.ki = 0.5
-        self.kd = 0.03
+        # PID 게인
+        self.kp = 0.48
+        self.ki = 0.001
+        self.kd = 0.13
 
+        # PID 상태
         self.integral = 0.0
         self.prev_error = 0.0
-        self.dt = 0.1 
+        self.dt = 0.1  # 10Hz
+
         self.rate = rospy.Rate(10)
 
     def get_range(self, scan, angle):
         index = int((angle - scan.angle_min) / scan.angle_increment)
         index = max(0, min(index, len(scan.ranges) - 1))
         distance = scan.ranges[index]
-        # 문(Gap) 구간에서 데이터가 튀는 것을 방지하기 위해 최대치 제한
-        if math.isnan(distance) or math.isinf(distance) or distance > 5.0:
-            distance = 5.0
+        if math.isnan(distance) or math.isinf(distance):
+            distance = 10.0
         return distance
 
     def get_error(self, scan, desired_distance):
-        # 1. 각도를 다시 안정적인 정측면(90도) 근처로 복구
-        theta = math.radians(30)
-        a = self.get_range(scan, math.radians(60))  # 왼쪽 대각선 앞
-        b = self.get_range(scan, math.radians(90))  # 왼쪽 직각
+        theta = math.radians(45)
+        a = self.get_range(scan, -math.radians(45))
+        b = self.get_range(scan, -math.radians(90))
 
-        # 2. 기하학적 거리 계산
+        # [수정된 부분 시작] =======================================
+        # 오른쪽 센서값(b)이 1.5m보다 크다면, 거긴 벽이 아니라 뚫려있는 '문(입구)'입니다.
+        # 입구로 빨려 들어가지 않도록 오차(error)를 0으로 강제 반환하여 직진하게 만듭니다.
+        if b > 1.5:
+            return 0.0
+        # [수정된 부분 끝] =========================================
+
         alpha = math.atan2(a * math.cos(theta) - b, a * math.sin(theta))
-        current_dist = b * math.cos(alpha)
-        
-        # 3. 오차 계산 (이 값이 양수면 벽과 멀어져야 함)
-        return desired_distance - current_dist
+        wall_distance = b * math.cos(alpha)
+        return desired_distance - wall_distance
 
     def pid_control(self, error):
         p_term = self.kp * error
@@ -54,15 +58,7 @@ class WallFollowerPID:
         d_term = self.kd * (error - self.prev_error) / self.dt
         self.prev_error = error
 
-        # [중요] 부호 체크! 
-        # 왼쪽 벽 주행 시: 
-        # 오차가 (+)다 = 벽과 너무 가깝다 -> 오른쪽으로 꺾어야 함 (음수 값)
-        # 오차가 (-)다 = 벽과 너무 멀다 -> 왼쪽으로 꺾어야 함 (양수 값)
-        # 따라서 계산된 값에 마이너스(-)를 붙여줍니다.
-        angular_z = -(p_term + i_term + d_term) 
-
-        # 너무 급하게 돌지 않도록 제한
-        angular_z = np.clip(angular_z, -0.8, 0.8)
+        angular_z = p_term + i_term + d_term
 
         twist = Twist()
         twist.linear.x = LINEAR_SPEED
@@ -70,19 +66,17 @@ class WallFollowerPID:
         self.pub.publish(twist)
 
     def scan_callback(self, scan):
-        # 전방 감지 범위를 넓혀서 코너를 미리 감지
         front = self.get_range(scan, 0.0)
         error = self.get_error(scan, DESIRED_DISTANCE)
 
-        # 전방에 벽이 있으면(ㄱ자 꺾임) 더 과감하게 회전
-        if front < 0.8:
+        if front < 0.5:
             twist = Twist()
-            twist.linear.x = 0.05  # 속도 대폭 감속
-            twist.angular.z = -0.8  # 우회전 (왼쪽 벽을 따라가므로 우회전해야 함)
+            twist.angular.z = ANGULAR_SPEED
             self.pub.publish(twist)
-            rospy.loginfo("코너/문 감지 - 감속 선회 중...")
+            rospy.loginfo("전방 벽 — 좌회전 | 전방: %.2f", front)
         else:
             self.pid_control(error)
+            rospy.loginfo("PID 벽 따라가기 | 오차: %.3f", error)
 
 if __name__ == '__main__':
     try:
