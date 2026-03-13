@@ -13,7 +13,7 @@
 -->
 
   <!-- Map server -->
-  <arg name="map_file" default="$(find diff_wheeled_robot_gazebo)/maps/test2.yaml"/>
+  <arg name="map_file" default="$(find diff_wheeled_robot_gazebo)/maps/test2_circle.yaml"/>
   <!-- <arg name="map_file" default="$(find diff_wheeled_robot_gazebo)/maps/willo.yaml"/> -->
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
 
