@@ -193,3 +193,9 @@ target_link_libraries(attach_detach_object ${catkin_LIBRARIES} )
 ## Declare a cpp executable
 add_executable(pick_place_action src/pick_place_action.cpp)
 target_link_libraries(pick_place_action ${catkin_LIBRARIES} )
+
+add_executable(pick_place_reverse src/pick_place_reverse.cpp)
+
+add_dependencies(pick_place_reverse seven_dof_arm_test_generate_messages_cpp)
+
+target_link_libraries(pick_place_reverse ${catkin_LIBRARIES})

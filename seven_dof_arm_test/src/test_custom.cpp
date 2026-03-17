@@ -91,13 +91,13 @@ int main(int argc, char **argv)
   // We can plan a motion for this group to a desired pose for the 
   // end-effector.
   geometry_msgs::Pose target_pose1;
-  target_pose1.orientation.w = 0.726282;
-  target_pose1.orientation.x= 4.04423e-07;
-  target_pose1.orientation.y = -0.687396;
-  target_pose1.orientation.z = 4.81813e-07;
+  target_pose1.orientation.w = 1.726282;
+  target_pose1.orientation.x= 9.04423e-07;
+  target_pose1.orientation.y = -4.687396;
+  target_pose1.orientation.z = 3.81813e-07;
 
-  target_pose1.position.x = 0.0261186;
-  target_pose1.position.y = 4.50972e-07;
+  target_pose1.position.x = 2.0261186;
+  target_pose1.position.y = 1.50972e-07;
   target_pose1.position.z = 0.573659;
   group.setPoseTarget(target_pose1);
 
